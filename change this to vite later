@@ -1,0 +1,103 @@
+// App.jsx ////////////////////////////////
+import { useState } from 'react'
+import './App.css'
+
+function App() {
+  
+  let tree = {
+    children: [
+      {
+        name: "node_modules",
+        children: [
+          {
+            name: "react",
+            children: [
+              {
+                name: "react.inner"
+              }
+            ]
+          },
+          {
+            name: ".vite",
+            children: [
+              {
+                name: "vite.inner",
+                children: [
+                  {
+                    name: "vite.inner.inner"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        name: "package.json"
+      },
+      {
+        name: "package-lock.json"
+      },
+      {
+        name: "vite.config.js"
+      }
+    ]
+  }
+
+  function Entry({entry, depth}) {
+    const [isExpanded, setIsExpanded] = useState(false);
+    return (
+      <div>
+        {entry.children?.length > 0 ? (
+          <button className='entry' onClick={() => setIsExpanded(!isExpanded)}>
+            <div>{isExpanded ? "- ": "+"} {entry.name}</div>
+          </button>
+        ) : (<div>{entry.name}</div>)}
+      
+      {
+        isExpanded && (
+          <div style={{paddingLeft: `${depth*10}px`}}>
+          {
+            entry.children?.map((entry, i) => (
+              <Entry key={i} entry={entry} depth={depth+1}/>
+            ))
+          }
+        </div>
+        )
+      }
+      </div>
+    )
+  }
+
+  return (
+    <div className='App'>
+      {
+        tree.children.map((entry, i) => (
+          <Entry key={i} entry={entry} depth={1}/>)
+        )
+      }
+    </div>
+  )
+}
+
+export default App;
+
+
+
+// App.css /////////////
+
+.App {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: left;
+  height: 400px;
+  width: 100vw;
+  padding: 40px;
+}
+
+.entry {
+  background: none;
+  padding-left: 0;
+  margin: 0;
+}
